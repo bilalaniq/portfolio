@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("heroCanvas");
-  const ctx = canvas.getContext("2d");
+  const ctx = canvas.getContext("2d", { alpha: false });
 
   const BLOCK_SIZE = 28;
   const STROKE_COLOR = "#27272a";
@@ -14,9 +14,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function resizeCanvas() {
     const wrapper = document.querySelector(".hero-canvas-wrapper");
-    let newWidth = Math.floor(wrapper.offsetWidth / BLOCK_SIZE) * BLOCK_SIZE;
-    canvas.width = newWidth;
-    canvas.height = Math.floor(wrapper.offsetHeight / BLOCK_SIZE) * BLOCK_SIZE;
+    const cols = Math.floor(wrapper.offsetWidth / BLOCK_SIZE);
+    const rows = Math.floor(wrapper.offsetHeight / BLOCK_SIZE);
+    canvas.width = cols * BLOCK_SIZE;
+    canvas.height = rows * BLOCK_SIZE;
+
+    drawGrid(); // pre-render grid once on resize
   }
 
   window.addEventListener("resize", resizeCanvas);
@@ -25,25 +28,34 @@ document.addEventListener("DOMContentLoaded", () => {
   function drawGrid() {
     const cols = Math.floor(canvas.width / BLOCK_SIZE);
     const rows = Math.floor(canvas.height / BLOCK_SIZE);
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        const x = c * BLOCK_SIZE;
-        const y = r * BLOCK_SIZE;
-        ctx.fillStyle = BASE_FILL;
-        ctx.fillRect(x, y, BLOCK_SIZE, BLOCK_SIZE);
-        ctx.strokeStyle = STROKE_COLOR;
-        ctx.lineWidth = 0.4;
-        ctx.strokeRect(x, y, BLOCK_SIZE, BLOCK_SIZE);
-      }
+    ctx.fillStyle = BASE_FILL;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = STROKE_COLOR;
+    ctx.lineWidth = 0.4;
+
+    // Use one path for all strokes for performance
+    ctx.beginPath();
+    for (let r = 0; r <= rows; r++) {
+      const y = r * BLOCK_SIZE;
+      ctx.moveTo(0, y);
+      ctx.lineTo(canvas.width, y);
     }
+    for (let c = 0; c <= cols; c++) {
+      const x = c * BLOCK_SIZE;
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, canvas.height);
+    }
+    ctx.stroke();
   }
 
   function drawCheckerboard(x, y) {
     const mini = BLOCK_SIZE / 15;
     for (let i = 0; i < 15; i++) {
       for (let j = 0; j < 15; j++) {
-        ctx.fillStyle = ((i + j) % 2 === 0) ? colorA : BASE_FILL;
-        ctx.fillRect(x + j * mini, y + i * mini, mini, mini);
+        if ((i + j) % 2 === 0) {
+          ctx.fillStyle = colorA;
+          ctx.fillRect(x + j * mini, y + i * mini, mini, mini);
+        }
       }
     }
   }
@@ -52,8 +64,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const mini = BLOCK_SIZE / 15;
     for (let i = 0; i < 15; i++) {
       for (let j = 0; j < 15; j++) {
-        ctx.fillStyle = ( (i + j) % 3 === 0 ) ? STROKE_COLOR : BASE_FILL;
-        ctx.fillRect(x + j * mini, y + i * mini, mini, mini);
+        if ((i + j) % 3 === 0) {
+          ctx.fillStyle = STROKE_COLOR;
+          ctx.fillRect(x + j * mini, y + i * mini, mini, mini);
+        }
       }
     }
   }
@@ -82,6 +96,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function animate() {
     requestAnimationFrame(animate);
+
+    // only re-draw grid where effects exist
+    if (effects.length === 0) return;
+
     drawGrid();
     const now = Date.now();
     for (let i = effects.length - 1; i >= 0; i--) {
