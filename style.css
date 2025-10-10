@@ -13,24 +13,26 @@ body {
 /* Header */
 .cyber-header {
   width: 100%;
-  padding: 2px 50px;
+  padding: 15px 50px;
+  /* 🔹 increased top/bottom padding */
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  /* 🔹 keeps both logo & button centered vertically */
+  justify-content: space-between;
+  /* logo left, button right */
   background: #000;
   position: fixed;
   top: 0;
   left: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  /* thin white line */
   z-index: 20;
+  box-sizing: border-box;
 }
 
 /* Logo text */
 .logo {
   font-family: 'Orbitron', sans-serif;
   font-size: 1.6rem;
-  /* ↓ slightly smaller */
   font-weight: 800;
   color: #fff;
   letter-spacing: 2px;
@@ -40,6 +42,30 @@ body {
 .logo span {
   color: #ff008c;
 }
+
+/* Resume Button */
+.resume-btn {
+  border: 2px solid #d26de8;
+  color: #d26de8;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s ease;
+  display: inline-flex;
+  /* 🔹 ensures perfect vertical centering */
+  align-items: center;
+  /* 🔹 centers text/icon vertically */
+}
+
+.resume-btn:hover {
+  background: #d26de8;
+  color: #fff;
+  box-shadow: 0 0 15px rgba(210, 109, 232, 0.5);
+  transform: translateY(-2px);
+}
+
+
 
 /* Hero section */
 .section_home-hero {
@@ -164,7 +190,7 @@ canvas#heroCanvas {
 /* ============================= */
 
 .projects-section {
-  padding: 120px 10%;
+  padding: 80px 10%;
   background: #000;
   color: #fff;
   text-align: center;
@@ -418,4 +444,14 @@ canvas#heroCanvas {
   width: 22px;
   height: 22px;
   fill: currentColor;
+}
+
+.projects-note {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  max-width: 700px;
+  margin: 0 auto 40px;
+  font-style: italic;
+  line-height: 1.6;
 }
