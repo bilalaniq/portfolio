@@ -186,7 +186,7 @@ canvas#heroCanvas {
 
 
 /* ============================= */
-/* 🔥 PROJECTS SECTION           */
+/* 🔥 FIXED PROJECTS SECTION     */
 /* ============================= */
 
 .projects-section {
@@ -206,10 +206,10 @@ canvas#heroCanvas {
   text-shadow: 0 0 15px rgba(210, 109, 232, 0.6);
 }
 
-/* Grid Layout */
+/* Grid Layout — exactly 3 per row */
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, 1fr); /* 💎 EXACTLY 3 columns */
   gap: 2rem;
   justify-items: center;
 }
@@ -221,6 +221,7 @@ canvas#heroCanvas {
   border-radius: 12px;
   padding: 2rem;
   max-width: 350px;
+  width: 100%;
   transition: 0.3s;
   position: relative;
   overflow: hidden;
@@ -266,7 +267,7 @@ canvas#heroCanvas {
   z-index: 1;
 }
 
-
+/* Project Link */
 .project-link {
   display: inline-flex;
   align-items: center;
@@ -280,7 +281,6 @@ canvas#heroCanvas {
 
 .project-link svg {
   width: 24px;
-  /* increased from 18px */
   height: 24px;
   fill: #ff008c;
   transition: transform 0.3s ease, filter 0.3s ease;
@@ -294,6 +294,19 @@ canvas#heroCanvas {
 .project-link:hover svg {
   transform: scale(1.2);
   filter: drop-shadow(0 0 6px #ff00ff);
+}
+
+/* Responsive Fixes */
+@media (max-width: 900px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 per row */
+  }
+}
+
+@media (max-width: 600px) {
+  .projects-grid {
+    grid-template-columns: 1fr; /* 1 per row */
+  }
 }
 
 
